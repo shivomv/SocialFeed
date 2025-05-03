@@ -51,12 +51,7 @@ export default async function Home() {
                 >
                   Get Started
                 </Link>
-                <Link
-                  href="/login"
-                  className="px-6 py-3 bg-transparent border border-white text-white font-medium rounded-lg hover:bg-white hover:bg-opacity-10 transition duration-300"
-                >
-                  Sign In
-                </Link>
+               
               </div>
             </div>
             <div className="hidden md:block">
