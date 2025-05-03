@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function middleware(req) {
   // Get auth token from cookies or Authorization header
@@ -22,6 +21,9 @@ export async function middleware(req) {
   // Check if the request is for a protected route
   const isProtectedRoute = pathname.startsWith('/dashboard');
 
+  // Check if the request is for an auth route (login or signup)
+  const isAuthRoute = pathname === '/login' || pathname === '/signup';
+
   // Check if the request is for an API route
   const isApiRoute = pathname.startsWith('/api');
 
@@ -31,6 +33,12 @@ export async function middleware(req) {
     // Add the original URL as a parameter to redirect back after login
     redirectUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(redirectUrl);
+  }
+
+  // If user is already logged in and tries to access login or signup pages,
+  // redirect them to the dashboard
+  if (isAuthRoute && token) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
   // For API routes that need authentication (except auth-related endpoints)
@@ -59,6 +67,8 @@ export async function middleware(req) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/login',
+    '/signup',
     '/api/posts/:path*',
     '/api/upload/:path*',
     '/api/auth/:path*'

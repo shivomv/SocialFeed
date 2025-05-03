@@ -114,6 +114,9 @@ export function AuthProvider({ children }) {
       // Store token in localStorage using our utility function
       setAuthToken(data.token);
 
+      // Also set a cookie for the middleware to access
+      document.cookie = `auth_token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+
       // Set user data
       setUser(data.user);
 
@@ -139,6 +142,9 @@ export function AuthProvider({ children }) {
 
         // Remove the token from localStorage using our utility function
         removeAuthToken();
+
+        // Also clear the cookie
+        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict';
       }
 
       // Clear user data

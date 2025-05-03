@@ -28,7 +28,11 @@ export default function Login() {
       const { success, error } = await signIn(data.email, data.password);
 
       if (success) {
-        router.push('/dashboard');
+        // Add a small delay to ensure the token is properly stored
+        setTimeout(() => {
+          // Force a hard navigation to dashboard to ensure middleware picks up the token
+          window.location.href = '/dashboard';
+        }, 300);
       } else {
         setError(error || 'Invalid email or password');
       }
