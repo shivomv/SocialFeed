@@ -152,38 +152,92 @@ export default function Dashboard() {
           </div>
 
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white shadow-md rounded-xl p-6 border border-gray-100">
-              <div className="flex items-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <h2 className="text-lg font-semibold text-gray-900">Your Profile</h2>
+            {/* Enhanced User Profile Card */}
+            <div className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+              {/* Profile Header with Cover Image */}
+              <div className="h-24 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
+                <div className="absolute -bottom-10 left-6">
+                  <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full border-4 border-white flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                    {user.fullName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs font-medium text-gray-500 uppercase">Email</p>
-                  <p className="mt-1 font-medium">{user.email}</p>
+              {/* Profile Content */}
+              <div className="pt-12 p-6">
+                <h2 className="text-xl font-bold text-gray-900">{user.fullName || user.user_metadata?.full_name || 'Your Profile'}</h2>
+                <p className="text-sm text-gray-500 mb-4">@{user.email?.split('@')[0] || 'user'}</p>
+
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-xs font-medium text-gray-500 uppercase">Email</p>
+                    </div>
+                    <p className="mt-1 font-medium">{user.email}</p>
+                  </div>
+
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <p className="text-xs font-medium text-gray-500 uppercase">Name</p>
+                    </div>
+                    <p className="mt-1 font-medium">{user.fullName || user.user_metadata?.full_name || 'Not provided'}</p>
+                  </div>
+
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-xs font-medium text-gray-500 uppercase">Member since</p>
+                    </div>
+                    <p className="mt-1 font-medium">
+                      {new Date(user.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs font-medium text-gray-500 uppercase">Name</p>
-                  <p className="mt-1 font-medium">{user.user_metadata?.full_name || 'Not provided'}</p>
-                </div>
-
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs font-medium text-gray-500 uppercase">Member since</p>
-                  <p className="mt-1 font-medium">{new Date(user.created_at).toLocaleDateString()}</p>
+                {/* Activity Stats */}
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Activity Stats</h3>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-indigo-50 p-3 rounded-lg">
+                      <p className="text-xl font-bold text-indigo-600">{posts.length}</p>
+                      <p className="text-xs text-gray-500">Posts</p>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <p className="text-xl font-bold text-purple-600">
+                        {posts.reduce((total, post) => total + (post.likes?.length || 0), 0)}
+                      </p>
+                      <p className="text-xs text-gray-500">Likes</p>
+                    </div>
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <p className="text-xl font-bold text-blue-600">
+                        {Math.floor((new Date() - new Date(user.created_at)) / (1000 * 60 * 60 * 24))}
+                      </p>
+                      <p className="text-xs text-gray-500">Days</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Enhanced Tips Card */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md rounded-xl p-6 text-white">
               <div className="flex items-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h2 className="text-lg font-semibold">Tips</h2>
+                <h2 className="text-lg font-semibold">Tips & Tricks</h2>
               </div>
 
               <ul className="space-y-3 text-sm">
@@ -191,21 +245,33 @@ export default function Dashboard() {
                   <svg className="h-5 w-5 text-indigo-200 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span>Use Markdown formatting for your posts: <strong>bold</strong>, <em>italic</em>, lists, and more</span>
+                  <span>Use <strong>**bold**</strong> and <em>*italic*</em> formatting in your posts</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-indigo-200 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span>Add images to make your posts more engaging and visually appealing</span>
+                  <span>Start lines with <strong># </strong> for headings and <strong>- </strong> for lists</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-indigo-200 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span>Your posts will appear on the homepage for everyone to see and engage with</span>
+                  <span>Use <strong>&gt; </strong> at the start of a line for blockquotes</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="h-5 w-5 text-indigo-200 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Add images to make your posts more engaging</span>
                 </li>
               </ul>
+
+              <div className="mt-4 pt-4 border-t border-white border-opacity-20">
+                <p className="text-xs text-indigo-100">
+                  Your posts will appear on the homepage for everyone to see and engage with. Be respectful and follow community guidelines.
+                </p>
+              </div>
             </div>
           </div>
         </div>

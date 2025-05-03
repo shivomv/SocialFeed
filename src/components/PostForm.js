@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
@@ -12,7 +12,44 @@ export default function PostForm({ onPostCreated }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [charCount, setCharCount] = useState(0);
+  const [formattingTip, setFormattingTip] = useState('');
   const fileInputRef = useRef(null);
+
+  // Random formatting tips to show users
+  const formattingTips = [
+    "Use **text** for bold or *text* for italic formatting",
+    "Start a line with # for heading or ## for subheading",
+    "Use - at the start of a line to create a list item",
+    "Start a line with > to create a blockquote",
+    "Add an image to make your post more engaging",
+    "Keep your post concise and to the point for better engagement",
+    "Ask questions to encourage responses from others"
+  ];
+
+  // Show a random formatting tip when component mounts
+  useEffect(() => {
+    const randomTip = formattingTips[Math.floor(Math.random() * formattingTips.length)];
+    setFormattingTip(randomTip);
+  }, []);
+
+  const handleContentChange = (e) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+    setCharCount(newContent.length);
+
+    // Show a new formatting tip when content length reaches certain thresholds
+    if (newContent.length === 50 || newContent.length === 100 || newContent.length === 200) {
+      const randomTip = formattingTips[Math.floor(Math.random() * formattingTips.length)];
+      setFormattingTip(randomTip);
+    }
+
+    // Clear error when user starts typing
+    if (error && newContent.trim().length > 0) {
+      setError('');
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -94,9 +131,18 @@ export default function PostForm({ onPostCreated }) {
       setContent('');
       setImage(null);
       setImagePreview(null);
+      setCharCount(0);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+
+      // Set success message
+      setSuccess('Your post was published successfully!');
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess('');
+      }, 3000);
 
       // Notify parent component
       const newPost = await response.json();
@@ -125,50 +171,72 @@ export default function PostForm({ onPostCreated }) {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Content
           </label>
-          <div className="rounded-md border border-gray-300">
+          <div className="rounded-md border border-gray-300 relative">
             <textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="What's on your mind?"
+              onChange={handleContentChange}
+              placeholder="What's on your mind? Share your thoughts, ideas, or questions..."
               className="w-full h-40 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               rows={6}
+              maxLength={1000}
             />
+            <div className="absolute bottom-2 right-3 text-xs text-gray-400">
+              {charCount}/1000
+            </div>
           </div>
-          <div className="mt-2 flex flex-wrap gap-2">
+
+          {/* Formatting tip */}
+          {formattingTip && (
+            <div className="mt-2 p-2 bg-blue-50 text-blue-700 rounded-md text-xs flex items-start">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{formattingTip}</span>
+            </div>
+          )}
+
+          {/* Success message */}
+          {success && (
+            <div className="mt-2 p-2 bg-green-50 text-green-700 rounded-md text-xs">
+              {success}
+            </div>
+          )}
+
+          <div className="mt-3 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setContent(prev => prev + '**Bold Text**')}
-              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 flex items-center"
             >
-              Bold
+              <span className="font-bold mr-1">B</span> Bold
             </button>
             <button
               type="button"
               onClick={() => setContent(prev => prev + '*Italic Text*')}
-              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 flex items-center"
             >
-              Italic
+              <span className="italic mr-1">I</span> Italic
             </button>
             <button
               type="button"
               onClick={() => setContent(prev => prev + '\n# Heading')}
-              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 flex items-center"
             >
-              Heading
+              <span className="font-bold mr-1">H</span> Heading
             </button>
             <button
               type="button"
               onClick={() => setContent(prev => prev + '\n- List item')}
-              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 flex items-center"
             >
-              List
+              <span className="mr-1">•</span> List
             </button>
             <button
               type="button"
               onClick={() => setContent(prev => prev + '\n> Quote')}
-              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+              className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 flex items-center"
             >
-              Quote
+              <span className="mr-1">❝</span> Quote
             </button>
           </div>
           <p className="mt-1 text-xs text-gray-500">
