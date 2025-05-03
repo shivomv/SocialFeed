@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import Cookies from 'js-cookie';
 import Image from 'next/image';
+import { getAuthToken } from '@/utils/storage';
 
 export default function PostForm({ onPostCreated }) {
   const { user } = useAuth();
@@ -81,7 +81,8 @@ export default function PostForm({ onPostCreated }) {
 
     try {
       let imageUrl = null;
-      const token = Cookies.get('auth_token');
+      // Get token from localStorage using our utility function
+      const token = getAuthToken();
 
       if (!token) {
         throw new Error('You must be logged in to create a post');

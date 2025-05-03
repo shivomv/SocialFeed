@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import { getAuthToken, setAuthToken, removeAuthToken } from '@/utils/storage';
 
 const AuthContext = createContext();
 
@@ -15,7 +15,8 @@ export function AuthProvider({ children }) {
     // Check for active session on initial load
     const checkSession = async () => {
       try {
-        const token = Cookies.get('auth_token');
+        // Get token from localStorage using our utility function
+        const token = getAuthToken();
 
         if (!token) {
           setUser(null);
@@ -36,7 +37,7 @@ export function AuthProvider({ children }) {
           setUser(userData);
         } else {
           // Token is invalid, clear it
-          Cookies.remove('auth_token');
+          removeAuthToken();
           setUser(null);
         }
       } catch (error) {
@@ -47,7 +48,12 @@ export function AuthProvider({ children }) {
       }
     };
 
-    checkSession();
+    // Only run on client-side
+    if (typeof window !== 'undefined') {
+      checkSession();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const signUp = async (email, password, fullName) => {
@@ -70,8 +76,12 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Set the token in a cookie
-      Cookies.set('auth_token', data.token, { expires: 7 }); // 7 days
+      // Store token in localStorage instead of cookies
+      try {
+        localStorage.setItem('auth_token', data.token);
+      } catch (err) {
+        console.error('Error storing token in localStorage:', err);
+      }
 
       // Set user data
       setUser(data.user);
@@ -101,8 +111,8 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || 'Login failed');
       }
 
-      // Set the token in a cookie
-      Cookies.set('auth_token', data.token, { expires: 7 }); // 7 days
+      // Store token in localStorage using our utility function
+      setAuthToken(data.token);
 
       // Set user data
       setUser(data.user);
@@ -115,7 +125,8 @@ export function AuthProvider({ children }) {
 
   const signOut = async () => {
     try {
-      const token = Cookies.get('auth_token');
+      // Get token from localStorage using our utility function
+      const token = getAuthToken();
 
       if (token) {
         // Call the logout API
@@ -125,10 +136,10 @@ export function AuthProvider({ children }) {
             'Authorization': `Bearer ${token}`
           }
         });
-      }
 
-      // Remove the token cookie
-      Cookies.remove('auth_token');
+        // Remove the token from localStorage using our utility function
+        removeAuthToken();
+      }
 
       // Clear user data
       setUser(null);

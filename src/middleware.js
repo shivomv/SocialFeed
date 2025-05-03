@@ -1,8 +1,20 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function middleware(req) {
-  // Get auth token from cookies
-  const token = req.cookies.get('auth_token')?.value;
+  // Get auth token from cookies or Authorization header
+  // Note: In middleware, we can't access localStorage directly
+  // We'll check for the token in cookies (for backward compatibility)
+  // and also in the Authorization header (which our client code will set)
+  let token = req.cookies.get('auth_token')?.value;
+
+  // If no token in cookies, check Authorization header
+  if (!token) {
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
 
   // Get the pathname of the request
   const { pathname } = req.nextUrl;
