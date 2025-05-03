@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Social Media Illustration</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#F0F4FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#4F46E5" offset="0%"></stop>
+            <stop stop-color="#7C3AED" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Social-Media-Illustration">
+            <rect id="Background" fill="url(#linearGradient-1)" x="0" y="0" width="800" height="600"></rect>
+            
+            <!-- Circles -->
+            <circle id="Circle-1" fill="#EEF2FF" cx="200" cy="150" r="80"></circle>
+            <circle id="Circle-2" fill="#EEF2FF" cx="600" cy="450" r="100"></circle>
+            <circle id="Circle-3" fill="#EEF2FF" cx="400" cy="300" r="50"></circle>
+            
+            <!-- Phone -->
+            <g id="Phone" transform="translate(300, 150)">
+                <rect id="Phone-Body" fill="#1F2937" x="0" y="0" width="200" height="350" rx="20"></rect>
+                <rect id="Phone-Screen" fill="#FFFFFF" x="10" y="10" width="180" height="330" rx="10"></rect>
+                
+                <!-- App Interface -->
+                <rect id="Header" fill="url(#linearGradient-2)" x="10" y="10" width="180" height="50" rx="10"></rect>
+                <text id="App-Name" font-family="Arial-BoldMT, Arial" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="70" y="40">SocialFeed</tspan>
+                </text>
+                
+                <!-- Post 1 -->
+                <rect id="Post-1" fill="#F3F4F6" x="20" y="70" width="160" height="80" rx="5"></rect>
+                <circle id="Avatar-1" fill="#4F46E5" cx="40" cy="90" r="10"></circle>
+                <rect id="Name-1" fill="#9CA3AF" x="60" y="85" width="80" height="10" rx="2"></rect>
+                <rect id="Content-1" fill="#9CA3AF" x="40" y="110" width="120" height="30" rx="2"></rect>
+                
+                <!-- Post 2 -->
+                <rect id="Post-2" fill="#F3F4F6" x="20" y="160" width="160" height="80" rx="5"></rect>
+                <circle id="Avatar-2" fill="#7C3AED" cx="40" cy="180" r="10"></circle>
+                <rect id="Name-2" fill="#9CA3AF" x="60" y="175" width="80" height="10" rx="2"></rect>
+                <rect id="Content-2" fill="#9CA3AF" x="40" y="200" width="120" height="30" rx="2"></rect>
+                
+                <!-- Post 3 -->
+                <rect id="Post-3" fill="#F3F4F6" x="20" y="250" width="160" height="80" rx="5"></rect>
+                <circle id="Avatar-3" fill="#4F46E5" cx="40" cy="270" r="10"></circle>
+                <rect id="Name-3" fill="#9CA3AF" x="60" y="265" width="80" height="10" rx="2"></rect>
+                <rect id="Content-3" fill="#9CA3AF" x="40" y="290" width="120" height="30" rx="2"></rect>
+            </g>
+            
+            <!-- Connection Lines -->
+            <path d="M200,150 C300,100 350,200 400,300" id="Connection-1" stroke="#4F46E5" stroke-width="2" stroke-dasharray="5,5"></path>
+            <path d="M400,300 C450,350 500,400 600,450" id="Connection-2" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5,5"></path>
+            <path d="M200,150 C300,250 450,350 600,450" id="Connection-3" stroke="#4F46E5" stroke-width="2" stroke-dasharray="5,5"></path>
+            
+            <!-- Icons -->
+            <circle id="Icon-1" fill="#4F46E5" cx="200" cy="150" r="20"></circle>
+            <text id="Icon-1-Text" font-family="Arial-BoldMT, Arial" font-size="16" font-weight="bold" fill="#FFFFFF">
+                <tspan x="195" y="155">U</tspan>
+            </text>
+            
+            <circle id="Icon-2" fill="#7C3AED" cx="400" cy="300" r="20"></circle>
+            <text id="Icon-2-Text" font-family="Arial-BoldMT, Arial" font-size="16" font-weight="bold" fill="#FFFFFF">
+                <tspan x="395" y="305">S</tspan>
+            </text>
+            
+            <circle id="Icon-3" fill="#4F46E5" cx="600" cy="450" r="20"></circle>
+            <text id="Icon-3-Text" font-family="Arial-BoldMT, Arial" font-size="16" font-weight="bold" fill="#FFFFFF">
+                <tspan x="595" y="455">F</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
